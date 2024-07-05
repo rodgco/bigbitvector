@@ -11,6 +11,7 @@ clean:
 	go clean
 
 publish: 
+	git tag v$(VERSION)
 	git push --tags
 	git push
 	GOPROXY=proxy.golang.org go list -m github.com/rodgco/bigbitvector@$(VERSION)
@@ -18,6 +19,7 @@ publish:
 
 info:
 	@echo Makefile-SemVer demonstration, use autocomplete to see available commands.
+	@echo Current version: $(VERSION)
 
 # https://github.com/malcos/makefile-semver
 include Makefile.semver
