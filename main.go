@@ -32,7 +32,7 @@ type BigBitVector struct {
 // The [New] function creates a new BigBitVector with the specified number of bits.
 func New(n int) *BigBitVector {
 	alloc := uint(math.Ceil(float64(n) / float64(uintSize)))
-	
+
 	return &BigBitVector{n, make([]uint, alloc)}
 }
 
@@ -96,4 +96,3 @@ func (b *BigBitVector) Copy() *BigBitVector {
 	copy(c.vec, b.vec)
 	return c
 }
-

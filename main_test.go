@@ -139,4 +139,4 @@ func TestCopy(t *testing.T) {
 			t.Error("Expected equality")
 		}
 	}
-}	
+}
