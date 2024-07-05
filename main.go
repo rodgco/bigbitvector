@@ -64,8 +64,11 @@ func (b *BigBitVector) IsBitSet(n int) (bool, error) {
 }
 
 // The [GetBit] function returns the value of the bit at the specified index in the bit vector.
-func (b *BigBitVector) GetBit(n int) uint {
-	return b.vec[n/uintSize] & (1 << (n % uintSize))
+func (b *BigBitVector) GetBit(n int) (uint, error) {
+	if n < 0 || n >= b.len {
+		return 0, errors.New("index out of range")
+	}
+	return b.vec[n/uintSize] & (1 << (n % uintSize)), nil
 }
 
 // The [Size] function returns the number of bits in the bit vector.
