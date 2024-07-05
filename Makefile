@@ -1,15 +1,16 @@
 all: build test
  
 test:
-    go test -v main.go
- 
-run:
-    go run main.go
- 
-clean:
-    go clean
+	go test -cover
 
-publish: bump
+cover:
+	go test -coverprofile=coverage.out
+	go tool cover -html=coverage.out
+
+clean:
+	go clean
+
+publish: 
 	git push --tags
 	git push
 	GOPROXY=proxy.golang.org go list -m github.com/rodgco/bigbitvector@$(VERSION)
