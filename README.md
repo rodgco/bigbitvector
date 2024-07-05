@@ -3,7 +3,6 @@
 
 [![GoDoc](https://godoc.org/github.com/rodgco/bigbitvector?status.svg)](https://godoc.org/github.com/rodgco/bigbitvector)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rodgco/bigbitvector)](https://goreportcard.com/report/github.com/rodgco/bigbitvector)
-[![Build Status](https://travis-ci.org/rodgco/bigbitvector.svg?branch=main)](https://travis-ci.org/rodgco/bigbitvector)
 [![Coverage Status](https://coveralls.io/repos/github/rodgco/bigbitvector/badge.svg?branch=main)](https://coveralls.io/github/rodgco/bigbitvector?branch=main)
 
 Package bigbitvector implements a bit vector with a large number of bits.
