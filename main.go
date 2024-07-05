@@ -36,8 +36,8 @@ func New(n int) *BigBitVector {
 	return &BigBitVector{n, make([]uint, alloc)}
 }
 
-// The [SetBit] function sets the bit at the specified index in the bit vector.
-func (b *BigBitVector) SetBit(n int) (err error) {
+// The [Set] function sets the bit at the specified index in the bit vector.
+func (b *BigBitVector) Set(n int) (err error) {
 	if n < 0 || n >= b.len {
 		return errors.New("index out of range")
 	}
@@ -45,8 +45,8 @@ func (b *BigBitVector) SetBit(n int) (err error) {
 	return nil
 }
 
-// The [ClearBit] function clears the bit at the specified index in the bit vector.
-func (b *BigBitVector) ClearBit(n int) (err error) {
+// The [Unset] function clears the bit at the specified index in the bit vector.
+func (b *BigBitVector) Unset(n int) (err error) {
 	if n < 0 || n >= b.len {
 		return errors.New("index out of range")
 	}
@@ -54,17 +54,17 @@ func (b *BigBitVector) ClearBit(n int) (err error) {
 	return nil
 }
 
-// The [IsBitSet] function returns true if the bit at the specified index in the
+// The [IsSet] function returns true if the bit at the specified index in the
 // bit vector is set. Otherwise, it returns false.
-func (b *BigBitVector) IsBitSet(n int) (bool, error) {
+func (b *BigBitVector) IsSet(n int) (bool, error) {
 	if n < 0 || n >= b.len {
 		return false, errors.New("index out of range")
 	}
 	return (b.vec[n/uintSize] & (1 << (n % uintSize))) != 0, nil
 }
 
-// The [GetBit] function returns the value of the bit at the specified index in the bit vector.
-func (b *BigBitVector) GetBit(n int) (uint, error) {
+// The [Get] function returns the value of the bit at the specified index in the bit vector.
+func (b *BigBitVector) Get(n int) (uint, error) {
 	if n < 0 || n >= b.len {
 		return 0, errors.New("index out of range")
 	}
@@ -76,8 +76,8 @@ func (b *BigBitVector) Size() int {
 	return b.len
 }
 
-// The [ClearAll] function clears all bits in the bit vector.
-func (b *BigBitVector) ClearAll() {
+// The [UnsetAll] function clears all bits in the bit vector.
+func (b *BigBitVector) UnsetAll() {
 	for i := range b.vec {
 		b.vec[i] = 0
 	}

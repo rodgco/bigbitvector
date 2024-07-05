@@ -14,27 +14,27 @@ func TestBitVector(t *testing.T) {
 		t.Error("Expected vector size to be the size assigned")
 	}
 
-	err := bv.SetBit(0)
+	err := bv.Set(0)
 	if err != nil {
 		t.Error("Expected no error")
 	}
 
-	err = bv.SetBit(size)
+	err = bv.Set(size)
 	if err == nil {
 		t.Error("Expected \"out of range\" error")
 	}
 
-	err = bv.ClearBit(-1)
+	err = bv.Unset(-1)
 	if err == nil {
 		t.Error("Expected \"out of range\" error")
 	}
 
-	_, err = bv.GetBit(size)
+	_, err = bv.Get(size)
 	if err == nil {
 		t.Error("Expected \"out of range\" error")
 	}
 
-	_, err = bv.IsBitSet(-1)
+	_, err = bv.IsSet(-1)
 	if err == nil {
 		t.Error("Expected \"out of range\" error")
 	}
@@ -55,15 +55,15 @@ func TestBitVectorAllocation(t *testing.T) {
 func TestSetBit(t *testing.T) {
 	bv := New(10)
 
-	test, _ := bv.IsBitSet(0)
+	test, _ := bv.IsSet(0)
 
 	if test {
 		t.Error("Expected bit 0 to be unset on init")
 	}
 
-	bv.SetBit(0)
+	bv.Set(0)
 
-	test, _ = bv.IsBitSet(0)
+	test, _ = bv.IsSet(0)
 
 	if !test {
 		t.Error("Expected true, got false")
@@ -73,17 +73,17 @@ func TestSetBit(t *testing.T) {
 func TestClearBit(t *testing.T) {
 	bv := New(10)
 
-	bv.SetBit(0)
+	bv.Set(0)
 
-	test, _ := bv.IsBitSet(0)
+	test, _ := bv.IsSet(0)
 
 	if !test {
 		t.Error("Expected true, got false")
 	}
 
-	bv.ClearBit(0)
+	bv.Unset(0)
 
-	test, _ = bv.IsBitSet(0)
+	test, _ = bv.IsSet(0)
 
 	if test {
 		t.Error("Expected false, got true")
@@ -96,7 +96,7 @@ func TestSetAllBits(t *testing.T) {
 	bv.SetAll()
 
 	for i := 0; i < 10; i++ {
-		test, _ := bv.IsBitSet(i)
+		test, _ := bv.IsSet(i)
 		if !test {
 			t.Error("Expected true, got false")
 		}
@@ -109,16 +109,16 @@ func TestClearAll(t *testing.T) {
 	bv.SetAll()
 
 	for i := 0; i < 10; i++ {
-		test, _ := bv.IsBitSet(i)
+		test, _ := bv.IsSet(i)
 		if !test {
 			t.Error("Expected true, got false")
 		}
 	}
 
-	bv.ClearAll()
+	bv.UnsetAll()
 
 	for i := 0; i < 10; i++ {
-		test, _ := bv.IsBitSet(i)
+		test, _ := bv.IsSet(i)
 		if test {
 			t.Error("Expected false, got true")
 		}
@@ -133,8 +133,8 @@ func TestCopy(t *testing.T) {
 	bv2 := bv1.Copy()
 
 	for i := 0; i < 10; i++ {
-		test1, _ := bv1.GetBit(i)
-		test2, _ := bv2.GetBit(i)
+		test1, _ := bv1.Get(i)
+		test2, _ := bv2.Get(i)
 		if test1 != test2 {
 			t.Error("Expected equality")
 		}
