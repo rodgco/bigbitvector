@@ -20,3 +20,6 @@
 # Go workspace file
 go.work
 go.work.sum
+
+# https://github.com/malcos/makefile-semver
+VERSION.data
