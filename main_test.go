@@ -250,3 +250,154 @@ func TestCopy(t *testing.T) {
 		}
 	}
 }
+
+func TestFindFirstSet(t *testing.T) {
+	bv := New(10)
+
+	bv.Set(3)
+
+	index, err := bv.FindFirstSet()
+	if err != nil {
+		t.Error("Expected no error")
+	}
+	if index != 3 {
+		t.Error("Expected 3, got ", index)
+	}
+
+	bv.Unset(3)
+
+	index, err = bv.FindFirstSet()
+	if index != -1 {
+		t.Error("Expected -1, got ", index)
+	}
+	if err == nil {
+		t.Error("Expected error")
+	}
+}
+
+func TestFindFirstUnset(t *testing.T) {
+	bv := New(10)
+
+	bv.SetAll()
+	bv.Unset(3)
+
+	index, err := bv.FindFirstUnset()
+	if index != 3 {
+		t.Error("Expected 3, got ", index)
+	}
+	if err != nil {
+		t.Error("Expected no error")
+	}
+
+	bv.Set(3)
+
+	index, err = bv.FindFirstUnset()
+	if index != -1 {
+		t.Error("Expected -1, got ", index)
+	}
+	if err == nil {
+		t.Error("Expected error")
+	}
+}
+
+func TestFindNextSet(t *testing.T) {
+	bv := New(10)
+
+	bv.Set(3)
+
+	index, err := bv.FindNextSet(0)
+	if err != nil {
+		t.Error("Expected no error")
+	}
+	if index != 3 {
+		t.Error("Expected 3, got ", index)
+	}
+
+	index, err = bv.FindNextSet(4)
+	if index != -1 {
+		t.Error("Expected -1, got ", index)
+	}
+	if err == nil {
+		t.Error("Expected error")
+	}
+
+	_, err = bv.FindNextSet(-1)
+	if err == nil {
+		t.Error("Expected error")
+	}
+}
+
+func TestFindNextUnset(t *testing.T) {
+	bv := New(10)
+
+	bv.SetAll()
+	bv.Unset(3)
+
+	index, err := bv.FindNextUnset(0)
+	if err != nil {
+		t.Error("Expected no error")
+	}
+	if index != 3 {
+		t.Error("Expected 3, got ", index)
+	}
+
+	index, err = bv.FindNextUnset(4)
+	if index != -1 {
+		t.Error("Expected -1, got ", index)
+	}
+	if err == nil {
+		t.Error("Expected error")
+	}
+
+	_, err = bv.FindNextUnset(-1)
+	if err == nil {
+		t.Error("Expected error")
+	}
+}
+
+func TestCountRange(t *testing.T) {
+	bv := New(10)
+
+	bv.Set(0)
+	bv.Set(1)
+	bv.Set(2)
+
+	_, err := bv.CountRange(2, 0)
+	if err == nil {
+		t.Error("Expected error")
+	}
+
+	count, err := bv.CountRange(0, 2)
+	if err != nil {
+		t.Error("Expected no error")
+	}
+	if count != 3 {
+		t.Error("Expected 3, got ", count)
+	}
+
+	count, err = bv.CountRange(0, 1)
+	if count != 2 {
+		t.Error("Expected 2, got ", count)
+	}
+
+	count, err = bv.CountRange(1, 2)
+	if count != 2 {
+		t.Error("Expected 2, got ", count)
+	}
+
+	count, err = bv.CountRange(1, 1)
+	if count != 1 {
+		t.Error("Expected 1, got ", count)
+	}
+
+	_, err = bv.CountRange(-1, 2)
+	if err == nil {
+		t.Error("Expected error")
+	}
+
+	_, err = bv.CountRange(0, 11)
+	if err == nil {
+		t.Error("Expected error")
+	}
+}
+
