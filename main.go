@@ -163,3 +163,117 @@ func (b *BigBitVector) Count() (count int) {
 
 	return
 }
+
+// The [FindFirstSet] function returns the index of the first bit set in the bit vector.
+func (b *BigBitVector) FindFirstSet() (index int, err error) {
+	for i := range b.vec {
+		if b.vec[i] != 0 {
+			for j := 0; j < uintSize; j++ {
+				if b.vec[i] & (1 << j) != 0 {
+					index = i * uintSize + j
+					return
+				}
+			}
+		}
+	}
+
+	index = -1
+	err = errors.New("no bits set")
+
+	return
+}
+
+// The [FindFirstUnset] function returns the index of the first bit unset in the bit vector.
+func (b *BigBitVector) FindFirstUnset() (index int, err error) {
+	for i := range b.vec {
+		if b.vec[i] != math.MaxUint {
+			for j := 0; j < uintSize; j++ {
+				if b.vec[i] & (1 << j) == 0 {
+					index = i * uintSize + j
+					return
+				}
+			}
+		}
+	}
+
+	index = -1
+	err = errors.New("no bits unset")
+
+	return
+}
+
+// The [FindNextSet] function returns the index of the next bit set in the bit vector after the specified index.
+func (b *BigBitVector) FindNextSet(n int) (index int, err error) {
+	err = b.rangeCheck(n)
+	if err != nil {
+		return
+	}
+
+	for i := n/uintSize; i < len(b.vec); i++ {
+		if b.vec[i] != 0 {
+			for j := n % uintSize; j < uintSize; j++ {
+				if b.vec[i] & (1 << j) != 0 {
+					index = i * uintSize + j
+					return
+				}
+			}
+		}
+	}
+
+	index = -1
+	err = errors.New("no bits set")
+
+	return
+}
+
+// The [FindNextUnset] function returns the index of the next bit unset in the bit vector after the specified index.
+func (b *BigBitVector) FindNextUnset(n int) (index int, err error) {
+	err = b.rangeCheck(n)
+	if err != nil {
+		return
+	}
+
+	for i := n/uintSize; i < len(b.vec); i++ {
+		if b.vec[i] != math.MaxUint {
+			for j := n % uintSize; j < uintSize; j++ {
+				if b.vec[i] & (1 << j) == 0 {
+					index = i * uintSize + j
+					return
+				}
+			}
+		}
+	}
+
+	index = -1
+	err = errors.New("no bits unset")
+
+	return
+}
+
+// The [CountRange] function returns the number of bits set in the bit vector from the specified start index to the specified end index.
+func (b *BigBitVector) CountRange(start, end int) (count int, err error) {
+	err = b.rangeCheck(start)
+	if err != nil {
+		return
+	}
+
+	err = b.rangeCheck(end)
+	if err != nil {
+		return
+	}
+
+	if start > end {
+		err = errors.New("start index greater than end index")
+	}
+
+	// TODO: Evaluate if bitwise operations are faster than looping through the range
+	for i := start; i <= end; i++ {
+		isSet, _ := b.IsSet(i)
+		if isSet {
+			count++
+		}
+	}
+
+	return
+}
+
