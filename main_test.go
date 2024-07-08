@@ -8,35 +8,145 @@ import (
 func TestBitVector(t *testing.T) {
 	var size int = 10
 
-	bv := New(size)
 
+	// Test bigbitvector initialization
+	bv := New(size)
 	if bv.Size() != size {
 		t.Error("Expected vector size to be the size assigned")
 	}
 
-	err := bv.Set(0)
+	if bv.Count() != 0 {
+		t.Error("Expected count to be 0")
+	}
+
+	// Test bigbitvector range checking
+	_, err := bv.IsSet(0)
 	if err != nil {
-		t.Error("Expected no error")
+		t.Error("Expected no error, value within range")
 	}
 
-	err = bv.Set(size)
-	if err == nil {
-		t.Error("Expected \"out of range\" error")
-	}
-
-	err = bv.Unset(-1)
-	if err == nil {
-		t.Error("Expected \"out of range\" error")
-	}
-
-	_, err = bv.Get(size)
-	if err == nil {
-		t.Error("Expected \"out of range\" error")
+	_, err = bv.IsSet(size-1)
+	if err != nil {
+		t.Error("Expected no error, value within range")
 	}
 
 	_, err = bv.IsSet(-1)
 	if err == nil {
-		t.Error("Expected \"out of range\" error")
+		t.Error("Expected \"out of range\" error (lower bound)")
+	}
+
+	_, err = bv.IsSet(size)
+	if err == nil {
+		t.Error("Expected \"out of range\" error (upper bound)")
+	}
+
+	_, err = bv.Get(0)
+	if err != nil {
+		t.Error("Expected no error, value within range")
+	}
+
+	_, err = bv.Get(size-1)
+	if err != nil {
+		t.Error("Expected no error, value within range")
+	}
+
+	_, err = bv.Get(-1)
+	if err == nil {
+		t.Error("Expected \"out of range\" error (lower bound)")
+	}
+
+	_, err = bv.Get(size)
+	if err == nil {
+		t.Error("Expected \"out of range\" error (upper bound)")
+	}
+
+	// Test bigbitvector set/unset
+	_ = bv.Set(0)
+	isSet, _ := bv.IsSet(0)
+	if !isSet {
+		t.Error("Expected bit 0 to be set")
+	}
+
+	value, _ := bv.Get(0)
+	if value != 1 {
+		t.Error("Expected value to be 1")
+	}
+
+	if bv.Count() != 1 {
+		t.Error("Expected count to be 1 after set")
+	}
+
+	_ = bv.Set(0)
+	if bv.Count() != 1 {
+		t.Error("Expected count to be 1 after setting a setted bit")
+	}
+
+	_ = bv.Unset(0)
+
+	isSet, _ = bv.IsSet(0)
+	if isSet {
+		t.Error("Expected bit 0 to be unset")
+	}
+
+	value, _ = bv.Get(0)
+	if value != 0 {
+		t.Error("Expected value to be 0")
+	}
+
+	if bv.Count() != 0 {
+		t.Error("Expected count to be 0 after unset")
+	}
+
+	_ = bv.Unset(0)
+	if bv.Count() != 0 {
+		t.Error("Expected count to be 0 after unsetting an unset bit")
+	}
+}
+
+func TestBitVectorToggle(t *testing.T) {
+	var size int = 10
+	bv := New(size)
+
+	// Test bigbitvector toggle range checking
+	err := bv.Toggle(-1)
+	if err == nil {
+		t.Error("Expected \"out of range\" error (lower bound)")
+	}
+
+	err = bv.Toggle(size)
+	if err == nil {
+		t.Error("Expected \"out of range\" error (upper bound)")
+	}
+
+	// Test bigbitvector toggle
+	_ = bv.Toggle(0)
+	isSet, _ := bv.IsSet(0)
+	if !isSet {
+		t.Error("Expected bit 0 to be set after toggle")
+	}
+
+	value, _ := bv.Get(0)
+	if value != 1 {
+		t.Error("Expected value to be 1 after toggle")
+	}
+
+	if bv.Count() != 1 {
+		t.Error("Expected count to be 1 after toggle")
+	}
+
+	_ = bv.Toggle(0)
+	isSet, _ = bv.IsSet(0)
+	if isSet {
+		t.Error("Expected bit 0 to be unset after toggle")
+	}
+
+	value, _ = bv.Get(0)
+	if value != 0 {
+		t.Error("Expected value to be 0 after toggle")
+	}
+
+	if bv.Count() != 0 {
+		t.Error("Expected count to be 0 after toggle")
 	}
 }
 
