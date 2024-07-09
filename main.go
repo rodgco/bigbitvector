@@ -250,6 +250,28 @@ func (b *BigBitVector) FindNextUnset(n int) (index int, err error) {
 	return
 }
 
+// The [FindNthSet] function returns the index of the nth bit set in the bit vector.
+func (b *BigBitVector) FindNthSet(n int) (index int, err error) {
+	if b.count >= n && n > 0 {
+		count := 0
+		for i := 1; count < n; i++ {
+			isSet, _ := b.IsSet(i)
+			if isSet {
+				count++
+				if count == n {
+					index = i
+					return
+				}
+			}
+		}
+	}
+
+	index = -1
+	err = errors.New("invalid n value")
+
+	return
+}
+
 // The [CountRange] function returns the number of bits set in the bit vector from the specified start index to the specified end index.
 func (b *BigBitVector) CountRange(start, end int) (count int, err error) {
 	err = b.rangeCheck(start)
@@ -276,4 +298,3 @@ func (b *BigBitVector) CountRange(start, end int) (count int, err error) {
 
 	return
 }
-

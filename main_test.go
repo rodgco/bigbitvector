@@ -355,6 +355,40 @@ func TestFindNextUnset(t *testing.T) {
 	}
 }
 
+func TestFindNthSet(t *testing.T) {
+	bv := New(10)
+
+	bv.Set(3)
+	bv.Set(5)
+	bv.Set(7)
+
+	index, err := bv.FindNthSet(1)
+	if err != nil {
+		t.Error("Expected no error")
+	}
+	if index != 3 {
+		t.Error("Expected 3, got ", index)
+	}
+
+	index, err = bv.FindNthSet(3)
+	if err != nil {
+		t.Error("Expected no error")
+	}
+	if index != 7 {
+		t.Error("Expected 7, got ", index)
+	}
+
+	_, err = bv.FindNthSet(4)
+	if err == nil {
+		t.Error("Expected error")
+	}
+
+	_, err = bv.FindNthSet(-1)
+	if err == nil {
+		t.Error("Expected error")
+	}
+}
+
 func TestCountRange(t *testing.T) {
 	bv := New(10)
 
