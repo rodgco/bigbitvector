@@ -254,7 +254,7 @@ func (b *BigBitVector) FindNextUnset(n int) (index int, err error) {
 func (b *BigBitVector) FindNthSet(n int) (index int, err error) {
 	if b.count >= n && n > 0 {
 		count := 0
-		for i := 1; count < n; i++ {
+		for i := 0; count < n; i++ {
 			isSet, _ := b.IsSet(i)
 			if isSet {
 				count++
